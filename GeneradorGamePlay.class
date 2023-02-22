@@ -1,0 +1,142 @@
+import java.util.Random;
+/**
+ *
+ * @author LV
+ */
+public class GeneradorGamePlay {
+    //**********ATRIBUTOS**********
+    private Personaje[] personaje = new Personaje[5];
+    private Personaje[] enemigos = new Personaje[5];
+    private Objeto[] objetos = new Objeto[3];
+    private Mejora[] mejoras = new Mejora[3];
+    
+    
+    //**********MÉTODOS**********
+    //Método para generar los personajes que se usarán en la tienda
+    public Personaje[] generarPersonajes(){
+        personaje[0] = new Personaje("CABALLERO",300,45,"Un cuadro cada turno","Golpea con su espada a todos al rededor",false);
+        personaje[1] = new Personaje("ARQUERO",150,100,"Tres cuadros cada turno","Dispara ua flecha a cualquier punto en un rango de tres casillas, en cualquiera de las líneas",false);
+        personaje[2] = new Personaje("MAGO",100,60,"Hasta dos cuadros cada turno","Dispara un hechizo hacia el final de una línea que impacta en el primer enemigo/obstáculo que se encuentre",true);
+        personaje[3] = new Personaje("Gigante",350,56,"Un cuadro cada turno","Golpea con su brazo, lo que le hace daño a todos los enemigos/obstáculos en una línea en un rango de 3 cuadros",false);
+        personaje[4] = new Personaje("DRAGON",250,75,"Hasta tres cuadros por turno","En línea y en un rango de dos cuadros a todo lo que esté en dicho rango",true);
+        
+        return personaje;
+    }
+    
+    //Método para generar enemigos
+    public Personaje[] generarEnemigos(){
+        enemigos[0] = new Personaje("OGRO",300,50,"Un cuadro a la vez","Golpea con su bastón a un punto en un rango de un cuadro a su alrededor",false);
+        enemigos[1] = new Personaje("GÁRGOLA",150,100,"Hasta tres cuadros a la vez","Lanza una bola de fuego en una línea en un rango de dos cuadros, que impacta con el primer personaje del jugador que encuentre",true);
+        enemigos[2] = new Personaje("BRUJA",150,45,"Hasta en una línea","Lanza un hechizo en toda una línea, que impacta con el primer personaje o árbol que encuentre",true);
+        enemigos[3] = new Personaje("CANCERBERO",400,45,"Un cuadro por turno","Incendia todo a su alrededor, en un rango de un cuadro",false);
+        enemigos[4] = new Personaje("FLOR CARNÍVORA",250,30,"No se puede mover","Golpea con sus raíces a todos los personajes que estén en una línea en un rango de tres casillas. Si el jugador está a un cuadro de la flor, esta se lo comerá, matando así al personaje",false);
+        
+        return personaje;
+    }
+    
+    //Método para generar los objetos
+    public Objeto[] generarObjetos(){
+        objetos[0] = new Objeto("SEMILLA DE LA VIDA",50,"Resucita a uno de los personajes");
+        objetos[1] = new Objeto("ELIXIR VERDE",25,"Cura 50 de vida");
+        objetos[2] = new Objeto("CAPA DE MOVILIDAD",75,"Mueve al personaje una casilla a su alrededor");
+        
+        return objetos;
+    }
+    
+    //Método para generar las mejoras
+    public Mejora[] generarMejoras(){
+        mejoras[0] = new Mejora("VIDA",80,"Le otorga al personaje 50 de vida máxima");
+        mejoras[1] = new Mejora("DAÑO",125,"Le otorga al personaje 10 de daño de ataque");
+        mejoras[2] = new Mejora("MOVILIDAD",500,"Le otorga al personaje 1 casilla adicional de movimiento");
+        
+        return mejoras;
+    }
+    
+    //Método para generar el tablero
+    //'por' = porcentaje --------------------------------------\
+    public String[][] generarTablero(int filas, int columnas, double porPlanicie, double porArbol, double porAgua, double porLava){
+        String[][] tablero = new String[filas][columnas];
+        double contPlanicie=1;
+        double contArbol=1;
+        double contAgua=1;
+        double contLava=1;
+        double totalCasillas = filas*columnas;
+        double nCasillasPlanicie = totalCasillas*(porPlanicie/100);
+        double nCasillasArbol = totalCasillas*(porArbol/100);
+        double nCasillasAgua = totalCasillas*(porAgua/100);
+        double nCasillasLava = totalCasillas*(porLava/100);
+        
+        //generando un numero entre 0 y Columnas --\
+        Random aleatorio = new Random();        // |
+        int posRan=0;                           // |
+        posRan = aleatorio.nextInt(columnas);   // |
+        // ********************************** // --/
+        
+        //ciclos para rellenar el arreglo con Planicie
+        while(contPlanicie<nCasillasPlanicie-1){
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    posRan = aleatorio.nextInt(columnas);
+                    if (tablero[i][j]!=" P ") {
+                        if (tablero[i][posRan]!=" P ") {
+                            tablero[i][posRan] = " P ";
+                            contPlanicie++;
+                            j=columnas;
+                        }
+                    }
+                }
+            }
+        }
+        
+        //ciclos para rellenar el tablero con Árboles
+        while(contArbol<nCasillasArbol-1){
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    posRan = aleatorio.nextInt(columnas);
+                    if (tablero[i][j]!=" P " && tablero[i][j]!=" Ar ") {
+                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" Ar ") {
+                            tablero[i][posRan] = " Ar ";
+                            contArbol++;
+                            j=columnas;
+                        }
+                    }
+                }
+            }
+        }
+        
+        //ciclos para rellenar el tablero con Agua
+        while(contAgua<nCasillasAgua-1){
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    posRan = aleatorio.nextInt(columnas);
+                    if (tablero[i][j]!=" P " && tablero[i][j]!=" Ar " && tablero[i][j]!=" Agu ") {
+                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" Ar " && tablero[i][posRan]!=" Agu ") {
+                            tablero[i][posRan] = " Agu ";
+                            contAgua++;
+                            j=columnas;
+                        }
+                    }
+                }
+            }
+        }
+        
+        //ciclos para rellenar el tablero con lava
+        while(contLava<nCasillasLava-1){
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    posRan = aleatorio.nextInt(columnas);
+                    if (tablero[i][j]!=" P " && tablero[i][j]!=" Ar " && tablero[i][j]!=" Agu " && tablero[i][j]!= " L ") {
+                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" Ar " && tablero[i][posRan]!=" Agu " && tablero[i][posRan]!=" L ") {
+                            tablero[i][posRan] = " L ";
+                            contLava++;
+                            j=columnas;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return tablero;
+    }
+    
+}
