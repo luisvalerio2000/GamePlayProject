@@ -1,3 +1,7 @@
+/**
+ *
+ * @author LV
+ */
 public class Jugador {
     //**********ATRIBUTOS**********
     private String nombreJugador;
