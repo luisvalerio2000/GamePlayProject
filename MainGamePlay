@@ -1,0 +1,157 @@
+import java.util.*;
+/**
+ *
+ * @author LV
+ */
+public class MainGamePlay {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        Tienda tiendaOp1 = new Tienda();    
+        String nombreJug;
+        int opMenuPrin;
+        int opMenu;
+        int nFilas;
+        int nColumnas;
+        double porPlanicie;
+        double porArbol;
+        double porAgua;
+        double porLava;
+        boolean bandOpMenuPrin = false;
+        boolean bandOpMenu = false;
+        
+        
+        System.out.println("Hola, por favor digita tu nombre o tu nick :D");
+        nombreJug = entrada.nextLine();
+        tiendaOp1.jugadorTienda.setNombreJugador(nombreJug);
+        
+        do{
+            bandOpMenuPrin = false;
+            System.out.println("**********MENÚ PRINCIPAL**********");
+            System.out.println("1 -----> INICIAR PARTIDA");
+            System.out.println("2 -----> TIENDA");
+            System.out.println("3 -----> GENERACION DE TABLERO");
+            System.out.println("4 -----> INVENTARIO");
+            System.out.println("0 -----> SALIR");
+            opMenuPrin = entrada.nextInt();
+            
+            if (opMenuPrin==1) {
+                do{
+                    System.out.println("INICIAR PARTIDA");
+                    System.out.println("Antes de iniciar una partida, necesitas tener personajes..");
+                    do{
+                        tiendaOp1.mostrarPersonajes();
+                        tiendaOp1.mostarObjetos();
+                        tiendaOp1.mostrarMejoras();
+                        System.out.println("Oro del jugador: "+tiendaOp1.jugadorTienda.oroJugador);
+                        System.out.println("Escribe el NOMBRE de lo que deseas que deseas comprar");
+                        String nombreCompra = entrada.nextLine();
+                        tiendaOp1.comprarItems(nombreCompra,nombreJug);
+                    }
+                    while(tiendaOp1.jugadorTienda.oroJugador>=25);
+                    System.out.println("SELECCION DE MAPAS");
+                    
+                    //seleccion de mapas a continuacion
+                    System.out.println("0 --> Regresar al menú principal");
+                    opMenu = entrada.nextInt();
+                    if (opMenu==0) {
+                        bandOpMenuPrin=true;
+                        bandOpMenu=false;
+                    }else{
+                            System.out.println("OPCIÓN INVÁLIDA, VUELVE A ELEGIR..");
+                            bandOpMenu = true;
+                    }
+                }while(bandOpMenu==true);
+            }
+            else if (opMenuPrin==2) {
+                do{
+                    System.out.println("TIENDA, AQUÍ PODRÁS COMPRAR PERSONAJES, OBJETOS O MEJORAS PARA TU EQUIPO");
+                    do{
+                        tiendaOp1.mostrarPersonajes();
+                        tiendaOp1.mostarObjetos();
+                        tiendaOp1.mostrarMejoras();
+                        System.out.println("Oro del jugador: "+tiendaOp1.jugadorTienda.oroJugador);
+                        System.out.println("Escribe el NOMBRE de lo que deseas que deseas comprar");
+                        String nombreCompra = entrada.nextLine();
+                        tiendaOp1.comprarItems(nombreCompra,nombreJug);
+                    }
+                    while(tiendaOp1.jugadorTienda.oroJugador>=25);
+                    
+                    
+                    
+                    System.out.println("0 --> Regresar al menú principal");
+                    opMenu = entrada.nextInt();
+                    if (opMenu==0) {
+                        bandOpMenuPrin=true;
+                        bandOpMenu=false;
+                    }else{
+                            System.out.println("OPCIÓN INVÁLIDA, VUELVE A ELEGIR..");
+                            bandOpMenu = true;
+                    }
+                }while(bandOpMenu==true);
+            }
+            else if (opMenuPrin==3) {
+                do{
+                    GeneradorGamePlay generador = new GeneradorGamePlay();
+                    System.out.println("GENERACION DE TABLERO");
+                    System.out.println("Digitar el numero de filas");
+                    nFilas = entrada.nextInt();
+                    System.out.println("Digitar el numero de columnas");
+                    nColumnas = entrada.nextInt();
+                    String[][] tablero = new String[nFilas][nColumnas];
+                    System.out.println("Digitar el porcentaje de planicie (sobre 100%)");
+                    porPlanicie = entrada.nextInt();
+                    System.out.println("Digitar el porcentaje de cantidad de árboles (sobre 100%)");
+                    porArbol = entrada.nextInt();
+                    System.out.println("Digitar el porcentaje de cantidad de agua (sobre 100%)");
+                    porAgua = entrada.nextInt();
+                    System.out.println("Digitar el porcentaje de cantidad de lava (sobre 100%)");
+                    porLava = entrada.nextInt();
+                    if (porPlanicie+porArbol+porAgua+porLava<=100) {
+                        tablero = generador.generarTablero(nFilas, nColumnas, porPlanicie, porArbol, porAgua, porLava);
+                        for (int i = 0; i < nFilas; i++) {
+                            for (int j = 0; j < nColumnas; j++) {
+                                System.out.print(tablero[i][j]+" ");
+                            }
+                            System.out.println("");
+                        }
+                    }
+                    else{
+                        System.out.println("La suma de los porcentajes debe ser mínima a 100");
+                    }
+                    
+                    System.out.println("0 --> Regresar al menú principal");
+                    opMenu = entrada.nextInt();
+                    if (opMenu==0) {
+                        bandOpMenuPrin=true;
+                        bandOpMenu=false;
+                    }else{
+                            System.out.println("OPCIÓN INVÁLIDA, VUELVE A ELEGIR..");
+                            bandOpMenu = true;
+                    }
+                }while(bandOpMenu==true);
+            }else if (opMenuPrin==4) {
+                do{
+                    System.out.println("INVENTARIO");
+                    tiendaOp1.jugadorTienda.mostrarDatos();
+                    System.out.println("0 --> Regresar al menú principal");
+                    opMenu = entrada.nextInt();
+                    if (opMenu==0) {
+                        bandOpMenuPrin=true;
+                        bandOpMenu=false;
+                    }else{
+                            System.out.println("OPCIÓN INVÁLIDA, VUELVE A ELEGIR..");
+                            bandOpMenu = true;
+                    }
+                }while(bandOpMenu==true);
+            }else if (opMenuPrin==0) {
+                System.out.println("SALIR");
+            }else{
+                System.out.println("OPCIÓN INVÁLIDA, VUELVE A ELEGIR..");
+                bandOpMenuPrin=true;
+            }
+            
+        }while(bandOpMenuPrin==true);
+        
+        
+    }
+}
