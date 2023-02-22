@@ -1,0 +1,47 @@
+/**
+ *
+ * @author LV
+ */
+public class Personaje {
+    //**********ATRIBUTOS**********
+    private String nombre;
+    private int vida;
+    private int daño;
+    private String movimiento; 
+    private String ataque;
+    private boolean volador;
+    
+    //**********MÉTODOS**********
+    
+    //Constructor
+    public Personaje(String nombre, int vida, int daño, String movimiento, String ataque, boolean volador){
+        this.nombre = nombre;
+        this.vida = vida;
+        this.daño = daño;
+        this.movimiento = movimiento;
+        this.ataque = ataque;
+        this.volador = volador;
+    }
+    
+    //Metodo para mostrar los datos del personaje
+    public void mostrarDatos(){
+        System.out.println("\n***DETALLES DEL PERSONAJE***");
+        System.out.println("--> Nombre: "+nombre);
+        System.out.println("--> Vida: "+vida);
+        System.out.println("--> Daño: "+daño);
+        System.out.println("--> Movimiento: "+movimiento);
+        System.out.println("--> Ataque: "+ataque);
+        if (volador) {
+            System.out.println("--> Volador: Si");
+        }else{
+            System.out.println("--> Volador: No");
+        }
+        System.out.println("--> Precio: 200 de oro");
+        System.out.println("");
+    }
+    
+    public String getNombre(){
+        return nombre;
+    }
+    
+}
