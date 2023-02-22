@@ -1,0 +1,54 @@
+public class Jugador {
+    //**********ATRIBUTOS**********
+    private String nombreJugador;
+    protected int oroJugador=500;
+    protected Personaje[] personajes = new Personaje[5];
+    protected Objeto[] objetos = new Objeto[3];
+    protected Mejora[] mejoras = new Mejora[3];
+    protected boolean persDisponibles=false, objsDisponibles=false, mejsDisponibles=false;
+    
+    //**********MÉTODOS**********
+    //Método para mostrar los datos del jugador
+    public void mostrarDatos(){
+        System.out.println("Jugador: "+nombreJugador);
+        System.out.println("Personajes del jugador");
+        for (int i = 0; i < personajes.length; i++) {
+            if (personajes[i]!=null) {
+                personajes[i].mostrarDatos();
+                persDisponibles=true;
+            }
+        }
+        if (persDisponibles==false) {
+            System.out.println("El jugador no posee personajes..");
+        }
+        System.out.println("Objetos del jugador");
+        for (int i = 0; i < objetos.length; i++) {
+            if (objetos[i]!=null) {
+                objetos[i].mostrarDatos();
+                objsDisponibles=true;
+            }
+        }
+        if (objsDisponibles==false) {
+            System.out.println("El jugador no posee objetos..");
+        }
+        System.out.println("Mejoras del jugador");
+        for (int i = 0; i < mejoras.length; i++) {
+            if (mejoras[i]!=null) {
+                mejoras[i].mostrarDatos();
+                mejsDisponibles=true;
+            }
+        }
+        if (mejsDisponibles==false) {
+            System.out.println("El jugador no posee mejoras..");
+        }
+        System.out.println("ORO: "+oroJugador);
+        System.out.println("");
+    }
+    
+    public void setNombreJugador(String nombre){
+        this.nombreJugador = nombre;
+    }
+
+    
+    
+}
