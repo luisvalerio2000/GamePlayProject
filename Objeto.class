@@ -1,0 +1,32 @@
+/**
+ *
+ * @author LV
+ */
+public class Objeto {
+    //**********ATRIBUTOS**********
+    private String nombreObjeto;
+    private int precioObjeto;
+    private String usoObjeto;
+    
+    //**********MÉTODOS**********
+    //Constructor
+    public Objeto(String nombreObjeto, int precioObjeto, String usoObjeto){
+        this.nombreObjeto = nombreObjeto;
+        this.precioObjeto = precioObjeto;
+        this.usoObjeto = usoObjeto;
+    }
+    
+    //Método para mostrar los datos del objeto
+    public void mostrarDatos(){
+        System.out.println("\n***DETALLES DEL OBJETO***");
+        System.out.println("--> Nombre del objeto: "+nombreObjeto);
+        System.out.println("--> Precio: "+precioObjeto+" de oro");
+        System.out.println("--> Uso del objeto: "+usoObjeto);
+        System.out.println("");
+    }
+    
+    public String getNombre(){
+        return nombreObjeto;
+    }
+    
+}
