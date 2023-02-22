@@ -1,0 +1,102 @@
+/**
+ *
+ * @author LV
+ */
+public class Tienda {
+    //La tienda va tener objetos, personajes y mejoras que el jugador podrá adquirir.
+    //**********ATRIBUTOS**********
+    private Objeto[] objetos = new Objeto[3];
+    private Personaje[] personajes = new Personaje[5];
+    private Mejora[] mejoras = new Mejora[3];
+    GeneradorGamePlay generar = new GeneradorGamePlay();    
+    Jugador jugadorTienda = new Jugador(); 
+    int contPers=0;
+    int contObj=0;
+    int contMej=0;
+    
+    //**********MÉTODOS**********
+    
+    //Método para mostrar los personajes de la tienda
+    public void mostrarPersonajes(){
+        this.personajes = generar.generarPersonajes();
+        System.out.println("PERSONAJES DISPONIBLES");
+        for (int i = 0; i < personajes.length; i++) {
+            personajes[i].mostrarDatos();
+        }
+    }
+    
+    //Método para mostrar los objetos de la tienda
+    public void mostarObjetos(){
+        this.objetos = generar.generarObjetos();
+        System.out.println("OBJETOS DISPONIBLES");
+        for (int i = 0; i < objetos.length; i++) {
+            objetos[i].mostrarDatos();
+        }
+    }
+    
+    //Método para mostrar las mejoras de la tienda
+    public void mostrarMejoras(){
+        this.mejoras = generar.generarMejoras();
+        System.out.println("MEJORAS DISPONIBLES");
+        for (int i = 0; i < mejoras.length; i++) {
+            mejoras[i].mostrarDatos();
+        }
+    }
+    
+    //Método para comprar items
+    public void comprarItems(String nombreItem, String nombreJugador){
+        this.personajes = generar.generarPersonajes();
+        this.objetos = generar.generarObjetos();
+        this.mejoras = generar.generarMejoras();
+        
+        
+        
+        
+        if ((nombreItem.equalsIgnoreCase("caballero")||nombreItem.equalsIgnoreCase("arquero")||nombreItem.equalsIgnoreCase("mago")||nombreItem.equalsIgnoreCase("gigante")||nombreItem.equalsIgnoreCase("dragon"))&&jugadorTienda.oroJugador>=200) {
+            for (int i = 0; i < personajes.length; i++) {
+                if (nombreItem.equalsIgnoreCase(personajes[i].getNombre())) {
+                    jugadorTienda.personajes[contPers] = personajes[i];
+                    jugadorTienda.oroJugador-=200;
+                    contPers++;
+                }
+            }
+        }
+        if ((nombreItem.equalsIgnoreCase("semilla de la vida")&&jugadorTienda.oroJugador>=50)||(nombreItem.equalsIgnoreCase("elixir verde")&&jugadorTienda.oroJugador>=25)||(nombreItem.equalsIgnoreCase("capa de movilidad")&&jugadorTienda.oroJugador>=75)) {
+            for (int i = 0; i < objetos.length; i++) {
+                if (nombreItem.equalsIgnoreCase(objetos[i].getNombre())) {
+                    jugadorTienda.objetos[contObj] = objetos[i];
+                    contObj++;
+                }
+            }
+        }
+        if((nombreItem.equalsIgnoreCase("vida")&&jugadorTienda.oroJugador>=80)||(nombreItem.equalsIgnoreCase("daño")&&jugadorTienda.oroJugador>=125)||(nombreItem.equalsIgnoreCase("movilidad")&&jugadorTienda.oroJugador>=500)){
+            for (int i = 0; i < mejoras.length; i++) {
+                if (nombreItem.equalsIgnoreCase(mejoras[i].getNombre())) {
+                    jugadorTienda.mejoras[contMej] = mejoras[i];
+                    contMej++;
+                }
+            }
+        }
+        
+        if (nombreItem.equalsIgnoreCase("semilla de la vida")&&(jugadorTienda.oroJugador>=50)) {
+            jugadorTienda.oroJugador-=50;
+        }else if (nombreItem.equalsIgnoreCase("elixir verde")&&(jugadorTienda.oroJugador>=25)) {
+            jugadorTienda.oroJugador-=25;
+        }else if (nombreItem.equalsIgnoreCase("capa de movilidad")&&(jugadorTienda.oroJugador>=75)) {
+            jugadorTienda.oroJugador-=75;
+        }else if (nombreItem.equalsIgnoreCase("vida")&&(jugadorTienda.oroJugador>=80)) {
+            jugadorTienda.oroJugador-=80;
+        }else if (nombreItem.equalsIgnoreCase("daño")&&(jugadorTienda.oroJugador>=125)) {
+            jugadorTienda.oroJugador-=125;
+        }else if (nombreItem.equalsIgnoreCase("movilidad")&&(jugadorTienda.oroJugador>=500)) {
+            jugadorTienda.oroJugador-=500;
+        }else{
+            System.out.println("ORO INSUFICIENTE..");
+        }
+        
+        jugadorTienda.mostrarDatos();
+    }
+    
+    
+    
+}
