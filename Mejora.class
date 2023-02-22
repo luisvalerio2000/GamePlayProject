@@ -1,0 +1,34 @@
+/**
+ *
+ * @author LV
+ */
+public class Mejora {
+    //**********ATRIBUTOS**********
+    private String nombreMejora;
+    private int precioMejora;
+    private String descMejora;
+    
+    
+    //**********MÉTODOS**********
+    //Constructor
+    public Mejora(String nombreMejora, int precioMejora, String descMejora){
+        this.nombreMejora = nombreMejora;
+        this.precioMejora = precioMejora;
+        this.descMejora = descMejora;
+    }
+    
+    //Método para mostrar los detalles de la mejora
+    public void mostrarDatos(){
+        System.out.println("\n***DETALLES DE LA MEJORA***");
+        System.out.println("Mejora: "+nombreMejora);
+        System.out.println("Precio: "+precioMejora+" de oro");
+        System.out.println("Beneficio: "+descMejora);
+        System.out.println("");
+    }
+    
+    public String getNombre(){
+        return nombreMejora;
+    }
+    
+    
+}
