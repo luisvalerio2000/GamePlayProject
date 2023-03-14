@@ -1,3 +1,6 @@
+
+package GamePlay;
+
 /**
  *
  * @author LV
@@ -43,14 +46,47 @@ public class Tienda {
         }
     }
     
+    //Método para vender los items que se desee
+    public void venderItem(String nombreItem){
+
+        if (nombreItem.equalsIgnoreCase("caballero")||nombreItem.equalsIgnoreCase("arquero")||nombreItem.equalsIgnoreCase("mago")||nombreItem.equalsIgnoreCase("gigante")||nombreItem.equalsIgnoreCase("dragon")) {
+            for (int i = 0; i < personajes.length; i++) {
+                if(jugadorTienda.personajes[i]!=null){
+                    if (nombreItem.equalsIgnoreCase(jugadorTienda.personajes[i].getNombre())) {
+                        jugadorTienda.personajes[i] = null;
+                        jugadorTienda.oroJugador+=200;
+                    }
+                }
+            }
+        }
+        if(nombreItem.equalsIgnoreCase("semilla de la vida")||nombreItem.equalsIgnoreCase("elixir verde")||nombreItem.equalsIgnoreCase("capa de movilidad")){
+            for (int i = 0; i < objetos.length; i++) {
+                if(jugadorTienda.objetos[i]!=null){
+                    if (nombreItem.equalsIgnoreCase(jugadorTienda.objetos[i].getNombre())) {
+                        jugadorTienda.objetos[i] = null;
+                        jugadorTienda.oroJugador+=25;
+                    }
+                }
+            }
+        }
+        if (nombreItem.equalsIgnoreCase("vida")||nombreItem.equalsIgnoreCase("daño")||nombreItem.equalsIgnoreCase("movilidad")) {
+            for (int i = 0; i < mejoras.length; i++) {
+                if(jugadorTienda.mejoras[i]!=null){
+                    if (nombreItem.equalsIgnoreCase(jugadorTienda.mejoras[i].getNombre())) {
+                        jugadorTienda.mejoras[i] = null;
+                        jugadorTienda.oroJugador+=25;
+                    }
+                }
+            }
+        }
+    }
+    
+    
     //Método para comprar items
     public void comprarItems(String nombreItem, String nombreJugador){
         this.personajes = generar.generarPersonajes();
         this.objetos = generar.generarObjetos();
         this.mejoras = generar.generarMejoras();
-        
-        
-        
         
         if ((nombreItem.equalsIgnoreCase("caballero")||nombreItem.equalsIgnoreCase("arquero")||nombreItem.equalsIgnoreCase("mago")||nombreItem.equalsIgnoreCase("gigante")||nombreItem.equalsIgnoreCase("dragon"))&&jugadorTienda.oroJugador>=200) {
             for (int i = 0; i < personajes.length; i++) {
