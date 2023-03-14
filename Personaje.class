@@ -1,3 +1,6 @@
+
+package GamePlay;
+
 /**
  *
  * @author LV
@@ -9,18 +12,20 @@ public class Personaje {
     private int daño;
     private String movimiento; 
     private String ataque;
+    private String id;
     private boolean volador;
     
     //**********MÉTODOS**********
     
     //Constructor
-    public Personaje(String nombre, int vida, int daño, String movimiento, String ataque, boolean volador){
+    public Personaje(String nombre, int vida, int daño, String movimiento, String ataque, boolean volador, String id){
         this.nombre = nombre;
         this.vida = vida;
         this.daño = daño;
         this.movimiento = movimiento;
         this.ataque = ataque;
         this.volador = volador;
+        this.id = id;
     }
     
     //Metodo para mostrar los datos del personaje
@@ -36,6 +41,7 @@ public class Personaje {
         }else{
             System.out.println("--> Volador: No");
         }
+        System.out.println("--> ID: "+id);
         System.out.println("--> Precio: 200 de oro");
         System.out.println("");
     }
@@ -44,4 +50,19 @@ public class Personaje {
         return nombre;
     }
     
+    public String getID(){
+        return id;
+    }
+    
+    public int getVida(){
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+    
+    public int getDaño(){
+        return daño;
+    }
 }
