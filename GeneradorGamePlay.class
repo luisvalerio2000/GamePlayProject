@@ -1,3 +1,5 @@
+
+package GamePlay;
 import java.util.Random;
 /**
  *
@@ -14,24 +16,49 @@ public class GeneradorGamePlay {
     //**********MÉTODOS**********
     //Método para generar los personajes que se usarán en la tienda
     public Personaje[] generarPersonajes(){
-        personaje[0] = new Personaje("CABALLERO",300,45,"Un cuadro cada turno","Golpea con su espada a todos al rededor",false);
-        personaje[1] = new Personaje("ARQUERO",150,100,"Tres cuadros cada turno","Dispara ua flecha a cualquier punto en un rango de tres casillas, en cualquiera de las líneas",false);
-        personaje[2] = new Personaje("MAGO",100,60,"Hasta dos cuadros cada turno","Dispara un hechizo hacia el final de una línea que impacta en el primer enemigo/obstáculo que se encuentre",true);
-        personaje[3] = new Personaje("Gigante",350,56,"Un cuadro cada turno","Golpea con su brazo, lo que le hace daño a todos los enemigos/obstáculos en una línea en un rango de 3 cuadros",false);
-        personaje[4] = new Personaje("DRAGON",250,75,"Hasta tres cuadros por turno","En línea y en un rango de dos cuadros a todo lo que esté en dicho rango",true);
+        personaje[0] = new Personaje("CABALLERO",300,45,"Un cuadro cada turno","Golpea con su espada a todos al rededor",false,"-CA-");
+        personaje[1] = new Personaje("ARQUERO",150,100,"Tres cuadros cada turno","Dispara ua flecha a cualquier punto en un rango de tres casillas, en cualquiera de las líneas",false,"-AR-");
+        personaje[2] = new Personaje("MAGO",100,60,"Hasta dos cuadros cada turno","Dispara un hechizo hacia el final de una línea que impacta en el primer enemigo/obstáculo que se encuentre",true,"-MA-");
+        personaje[3] = new Personaje("Gigante",350,56,"Un cuadro cada turno","Golpea con su brazo, lo que le hace daño a todos los enemigos/obstáculos en una línea en un rango de 3 cuadros",false,"-GI-");
+        personaje[4] = new Personaje("DRAGON",250,75,"Hasta tres cuadros por turno","En línea y en un rango de dos cuadros a todo lo que esté en dicho rango",true,"-DR-");
         
         return personaje;
     }
     
     //Método para generar enemigos
     public Personaje[] generarEnemigos(){
-        enemigos[0] = new Personaje("OGRO",300,50,"Un cuadro a la vez","Golpea con su bastón a un punto en un rango de un cuadro a su alrededor",false);
-        enemigos[1] = new Personaje("GÁRGOLA",150,100,"Hasta tres cuadros a la vez","Lanza una bola de fuego en una línea en un rango de dos cuadros, que impacta con el primer personaje del jugador que encuentre",true);
-        enemigos[2] = new Personaje("BRUJA",150,45,"Hasta en una línea","Lanza un hechizo en toda una línea, que impacta con el primer personaje o árbol que encuentre",true);
-        enemigos[3] = new Personaje("CANCERBERO",400,45,"Un cuadro por turno","Incendia todo a su alrededor, en un rango de un cuadro",false);
-        enemigos[4] = new Personaje("FLOR CARNÍVORA",250,30,"No se puede mover","Golpea con sus raíces a todos los personajes que estén en una línea en un rango de tres casillas. Si el jugador está a un cuadro de la flor, esta se lo comerá, matando así al personaje",false);
+        enemigos[0] = new Personaje("OGRO",300,50,"Un cuadro a la vez","Golpea con su bastón a un punto en un rango de un cuadro a su alrededor",false,"=og=");
+        enemigos[1] = new Personaje("GÁRGOLA",150,100,"Hasta tres cuadros a la vez","Lanza una bola de fuego en una línea en un rango de dos cuadros, que impacta con el primer personaje del jugador que encuentre",true,"=ga=");
+        enemigos[2] = new Personaje("BRUJA",150,45,"Hasta en una línea","Lanza un hechizo en toda una línea, que impacta con el primer personaje o árbol que encuentre",true,"=br=");
+        enemigos[3] = new Personaje("CANCERBERO",400,45,"Un cuadro por turno","Incendia todo a su alrededor, en un rango de un cuadro",false,"=ca=");
+        enemigos[4] = new Personaje("FLOR CARNÍVORA",250,30,"No se puede mover","Golpea con sus raíces a todos los personajes que estén en una línea en un rango de tres casillas. Si el jugador está a un cuadro de la flor, esta se lo comerá, matando así al personaje",false,"=fc=");
         
-        return personaje;
+        return enemigos;
+    }
+    
+    //Método para generar un enemigo aleatorio
+    public Personaje generarEnemigoAleatorio(){
+        Random ran = new Random();
+        Personaje[] enemigoAleatorio = generarEnemigos();
+        Personaje enemigo;
+        int aleatorio=0;
+        aleatorio = ran.nextInt(46);
+        
+        if (aleatorio>=0 && aleatorio<10) {
+            enemigo=enemigoAleatorio[0];
+        }else if (aleatorio>=10 && aleatorio<20) {
+            enemigo=enemigoAleatorio[1];
+        }else if (aleatorio>=20 && aleatorio<30) {
+            enemigo=enemigoAleatorio[4];
+        }else if (aleatorio>=30 && aleatorio<40) {
+            enemigo=enemigoAleatorio[3];
+        }else if (aleatorio>=40 && aleatorio<46) {
+            enemigo=enemigoAleatorio[4];
+        }else{
+            enemigo=enemigoAleatorio[0];
+        }
+        
+        return enemigo;
     }
     
     //Método para generar los objetos
@@ -93,9 +120,9 @@ public class GeneradorGamePlay {
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
                     posRan = aleatorio.nextInt(columnas);
-                    if (tablero[i][j]!=" P " && tablero[i][j]!=" Ar ") {
-                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" Ar ") {
-                            tablero[i][posRan] = " Ar ";
+                    if (tablero[i][j]!=" P " && tablero[i][j]!=" A ") {
+                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" A ") {
+                            tablero[i][posRan] = " A ";
                             contArbol++;
                             j=columnas;
                         }
@@ -109,9 +136,9 @@ public class GeneradorGamePlay {
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
                     posRan = aleatorio.nextInt(columnas);
-                    if (tablero[i][j]!=" P " && tablero[i][j]!=" Ar " && tablero[i][j]!=" Agu ") {
-                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" Ar " && tablero[i][posRan]!=" Agu ") {
-                            tablero[i][posRan] = " Agu ";
+                    if (tablero[i][j]!=" P " && tablero[i][j]!=" A " && tablero[i][j]!=" a ") {
+                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" A " && tablero[i][posRan]!=" a ") {
+                            tablero[i][posRan] = " a ";
                             contAgua++;
                             j=columnas;
                         }
@@ -125,8 +152,8 @@ public class GeneradorGamePlay {
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
                     posRan = aleatorio.nextInt(columnas);
-                    if (tablero[i][j]!=" P " && tablero[i][j]!=" Ar " && tablero[i][j]!=" Agu " && tablero[i][j]!= " L ") {
-                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" Ar " && tablero[i][posRan]!=" Agu " && tablero[i][posRan]!=" L ") {
+                    if (tablero[i][j]!=" P " && tablero[i][j]!=" A " && tablero[i][j]!=" a " && tablero[i][j]!= " L ") {
+                        if (tablero[i][posRan]!=" P " && tablero[i][posRan]!=" A " && tablero[i][posRan]!=" a " && tablero[i][posRan]!=" L ") {
                             tablero[i][posRan] = " L ";
                             contLava++;
                             j=columnas;
@@ -135,6 +162,14 @@ public class GeneradorGamePlay {
                 }
             }
         }
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (tablero[i][j] == null) {
+                    tablero[i][j] = " P ";
+                }
+            }
+        }
+        
         
         return tablero;
     }
