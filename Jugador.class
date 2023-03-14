@@ -1,3 +1,6 @@
+
+package GamePlay;
+
 /**
  *
  * @author LV
@@ -9,7 +12,7 @@ public class Jugador {
     protected Personaje[] personajes = new Personaje[5];
     protected Objeto[] objetos = new Objeto[3];
     protected Mejora[] mejoras = new Mejora[3];
-    protected boolean persDisponibles=false, objsDisponibles=false, mejsDisponibles=false;
+    private boolean persDisponibles=false, objsDisponibles=false, mejsDisponibles=false;
     
     //**********MÉTODOS**********
     //Método para mostrar los datos del jugador
@@ -19,7 +22,9 @@ public class Jugador {
         for (int i = 0; i < personajes.length; i++) {
             if (personajes[i]!=null) {
                 personajes[i].mostrarDatos();
-                persDisponibles=true;
+                persDisponibles = true;
+            }else{
+                persDisponibles = false;
             }
         }
         if (persDisponibles==false) {
@@ -29,7 +34,9 @@ public class Jugador {
         for (int i = 0; i < objetos.length; i++) {
             if (objetos[i]!=null) {
                 objetos[i].mostrarDatos();
-                objsDisponibles=true;
+                objsDisponibles = true;
+            }else{
+                objsDisponibles = false;
             }
         }
         if (objsDisponibles==false) {
@@ -39,7 +46,9 @@ public class Jugador {
         for (int i = 0; i < mejoras.length; i++) {
             if (mejoras[i]!=null) {
                 mejoras[i].mostrarDatos();
-                mejsDisponibles=true;
+                mejsDisponibles = true;
+            }else{
+                mejsDisponibles = false;
             }
         }
         if (mejsDisponibles==false) {
@@ -52,6 +61,7 @@ public class Jugador {
     public void setNombreJugador(String nombre){
         this.nombreJugador = nombre;
     }
+    
 
     
     
