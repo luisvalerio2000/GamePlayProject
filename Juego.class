@@ -1,0 +1,975 @@
+
+package GamePlay;
+import java.util.*;
+/**
+ *
+ * @author LV
+ */
+public class Juego {
+    //**********ATRIBUTOS**********
+    Random ran = new Random();
+    Scanner entrada = new Scanner(System.in);
+    private String[][] tablero;
+    private Personaje personaje;
+    private Personaje enemigo;
+    private int filas, columnas;
+    private int filaRandomP;
+    private int columnaRandomP;
+    private int filaRandomE;
+    private int columnaRandomE;
+    private boolean bandMovimientoArriba=true, bandMovimientoAbajo=true, bandMovimientoIzquierda=true, bandMovimientoDerecha=true;
+    private boolean bandMovimientoArribaE=true, bandMovimentoAbajoE=true, bandMovimientoIzquierdaE=true, bandMovimientoDerechaE=true;
+    private boolean bandEnemigoCerca=false;
+
+    
+    //**********MÉTODOS**********
+    //constructor
+    public Juego(String[][] tablero, Personaje personaje, Personaje enemigo, int filas, int columnas){
+        this.tablero = tablero;
+        this.personaje = personaje;
+        this.enemigo = enemigo;
+        this.filas = filas;
+        this.columnas = columnas;
+    }
+
+    //Método para recibir movimiento
+    public void mostrarOpcionesMovimiento(){
+        System.out.println("1 --> MOVER "+this.personaje.getNombre()+" HACIA ARRIBA");
+        System.out.println("2 --> MOVER "+this.personaje.getNombre()+" HACIA ABAJO");
+        System.out.println("3 --> MOVER "+this.personaje.getNombre()+" HACIA LA IZQUIERDA");
+        System.out.println("4 --> MOVER "+this.personaje.getNombre()+" HACIA LA DERECHA");
+    }
+    
+    public void asignarPersonaje(){
+        //aqui se establece el valor de las 2 siguientes variables de posicion
+        this.filaRandomP = ran.nextInt(this.filas);
+        this.columnaRandomP = ran.nextInt(this.columnas);
+        //------------------------------------
+        boolean band = false;
+        
+        if (this.personaje.getNombre().equalsIgnoreCase("caballero")) {
+            tablero[this.filaRandomP][this.columnaRandomP] = "-CA-";
+        }else if (this.personaje.getNombre().equalsIgnoreCase("arquero")) {
+            tablero[this.filaRandomP][this.columnaRandomP] = "-AR-";
+        }else if (this.personaje.getNombre().equalsIgnoreCase("mago")) {
+            tablero[this.filaRandomP][this.columnaRandomP] = "-MA-";
+        }else if (this.personaje.getNombre().equalsIgnoreCase("gigante")) {
+            tablero[this.filaRandomP][this.columnaRandomP] = "-GI-";
+        }else if (this.personaje.getNombre().equalsIgnoreCase("dragon")) {
+            tablero[this.filaRandomP][this.columnaRandomP] = "-DR-";
+        }
+        do{
+            filaRandomE = ran.nextInt(this.filas);
+            columnaRandomE = ran.nextInt(this.columnas);
+            while(filaRandomE!=this.filaRandomP && columnaRandomE!=this.columnaRandomP && band==false){
+                if (this.enemigo.getID().equalsIgnoreCase("=og=")) {
+                    tablero[filaRandomE][columnaRandomE] = "=og=";
+                    band = true;
+                }else if (this.enemigo.getID().equalsIgnoreCase("=ga=")) {
+                    tablero[filaRandomE][columnaRandomE] = "=ga=";
+                    band = true;
+                }else if (this.enemigo.getID().equalsIgnoreCase("=br=")) {
+                    tablero[filaRandomE][columnaRandomE] = "=br=";
+                    band = true;
+                }else if (this.enemigo.getID().equalsIgnoreCase("=ca=")) {
+                    tablero[filaRandomE][columnaRandomE] = "=ca=";
+                    band = true;
+                }else if (this.enemigo.getID().equalsIgnoreCase("=fc=")) {
+                    tablero[filaRandomE][columnaRandomE] = "=fc=";
+                    band = true;
+                }
+            }
+        }while(filaRandomE==this.filaRandomP || columnaRandomE==this.columnaRandomP);
+    }
+    
+    private void moverPersonaje(int op){
+        String aux="";
+        if (op==1 && this.bandMovimientoArriba==true) {
+            if (this.personaje.getID().equals("-CA-") || this.personaje.getID().equals("-GI-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP-1][this.columnaRandomP];
+                this.tablero[this.filaRandomP-1][this.columnaRandomP] = aux;
+                this.filaRandomP--;
+            }else if (this.personaje.getID().equals("-AR-") || this.personaje.getID().equals("-DR-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP-3][this.columnaRandomP];
+                this.tablero[this.filaRandomP-3][this.columnaRandomP] = aux;
+                this.filaRandomP-=3;
+            }else if (this.personaje.getID().equals("-MA-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP-2][this.columnaRandomP];
+                this.tablero[this.filaRandomP-2][this.columnaRandomP] = aux;
+                this.filaRandomP-=2;
+            }
+        }else if (op==2 && this.bandMovimientoAbajo==true) {
+            if (this.personaje.getID().equals("-CA-") || this.personaje.getID().equals("-GI-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP+1][this.columnaRandomP];
+                this.tablero[this.filaRandomP+1][this.columnaRandomP] = aux;
+                this.filaRandomP++;
+            }else if (this.personaje.getID().equals("-AR-") || this.personaje.getID().equals("-DR-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP+3][this.columnaRandomP];
+                this.tablero[this.filaRandomP+3][this.columnaRandomP] = aux;
+                this.filaRandomP+=3;
+            }else if (this.personaje.getID().equals("-MA-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP+2][this.columnaRandomP];
+                this.tablero[this.filaRandomP+2][this.columnaRandomP] = aux;
+                this.filaRandomP+=2;
+            }
+        }else if (op==3 && this.bandMovimientoIzquierda==true) {
+            if (this.personaje.getID().equals("-CA-") || this.personaje.getID().equals("-GI-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP][this.columnaRandomP-1];
+                this.tablero[this.filaRandomP][this.columnaRandomP-1] = aux;
+                this.columnaRandomP--;
+            }else if (this.personaje.getID().equals("-AR-") || this.personaje.getID().equals("-DR-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP][this.columnaRandomP-3];
+                this.tablero[this.filaRandomP][this.columnaRandomP-3] = aux;
+                this.columnaRandomP-=3;
+            }else if (this.personaje.getID().equals("-MA-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP][this.columnaRandomP-2];
+                this.tablero[this.filaRandomP][this.columnaRandomP-2] = aux;
+                this.columnaRandomP-=2;
+            }
+        }else if (op==4 && this.bandMovimientoDerecha==true) {
+            if (this.personaje.getID().equals("-CA-") || this.personaje.getID().equals("-GI-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP][this.columnaRandomP+1];
+                this.tablero[this.filaRandomP][this.columnaRandomP+1] = aux;
+                this.columnaRandomP++;
+            }else if (this.personaje.getID().equals("-AR-") || this.personaje.getID().equals("-DR-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP][this.columnaRandomP+3];
+                this.tablero[this.filaRandomP][this.columnaRandomP+3] = aux;
+                this.columnaRandomP+=3;
+            }else if (this.personaje.getID().equals("-MA-")) {
+                aux = this.tablero[this.filaRandomP][this.columnaRandomP];
+                this.tablero[this.filaRandomP][this.columnaRandomP] = this.tablero[this.filaRandomP][this.columnaRandomP+2];
+                this.tablero[this.filaRandomP][this.columnaRandomP+2] = aux;
+                this.columnaRandomP+=2;
+            }
+        }else{
+            if (this.bandMovimientoArriba==false || this.bandMovimientoAbajo==false || this.bandMovimientoIzquierda==false || this.bandMovimientoDerecha==false) {
+                System.out.println("MOVIMIENTO INVÁLIDO..");
+            }
+        }
+    }
+    
+    private void moverEnemigo(){                //random=0 ---> arriba
+        int random = ran.nextInt(41);            //random=1 ---> abajo
+        String aux="";                          //random=2 ---> izquierda
+        this.verificarCasillaMoverE();          //random=3 ---> derecha
+                                                
+        if ((random>=0 && random<10) && this.bandMovimientoArribaE==true) {
+            if (this.enemigo.getID().equals("=og=") || this.enemigo.getID().equals("=ca=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE-1][columnaRandomE];
+                this.tablero[filaRandomE-1][columnaRandomE] = aux;
+                filaRandomE--;
+            }else if (this.enemigo.getID().equals("=ga=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE-3][columnaRandomE];
+                this.tablero[filaRandomE-3][columnaRandomE] = aux;
+                filaRandomE-=3;
+            }else if (this.enemigo.getID().equals("=br=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[0][columnaRandomE];
+                this.tablero[0][columnaRandomE] = aux;
+                filaRandomE=0;
+            }
+        }else if ((random>=10 && random<20) && this.bandMovimentoAbajoE==true) {
+            if (this.enemigo.getID().equals("=og=") || this.enemigo.getID().equals("=ca=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE+1][columnaRandomE];
+                this.tablero[filaRandomE+1][columnaRandomE] = aux;
+                filaRandomE++;
+            }else if (this.enemigo.getID().equals("=ga=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE+3][columnaRandomE];
+                this.tablero[filaRandomE+3][columnaRandomE] = aux;
+                filaRandomE+=3;
+            }else if (this.enemigo.getID().equals("=br=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[this.filas-1][columnaRandomE];
+                this.tablero[this.filas-1][columnaRandomE] = aux;
+                filaRandomE = this.filas-1;
+            }
+        }else if ((random>=20 && random<30) && this.bandMovimientoIzquierdaE==true) {
+            if (this.enemigo.getID().equals("=og=") || this.enemigo.getID().equals("=ca=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE][columnaRandomE-1];
+                this.tablero[filaRandomE][columnaRandomE-1] = aux;
+                columnaRandomE--;
+            }else if (this.enemigo.getID().equals("=ga=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE][columnaRandomE-3];
+                this.tablero[filaRandomE][columnaRandomE-3] = aux;
+                columnaRandomE-=3;
+            }else if (this.enemigo.getID().equals("=br=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE][0];
+                this.tablero[filaRandomE][0] = aux;
+                columnaRandomE=0;
+            }
+        }else if ((random>=30 && random<40) && this.bandMovimientoDerechaE==true) {
+            if (this.enemigo.getID().equals("=og=") || this.enemigo.getID().equals("=ca=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE][columnaRandomE+1];
+                this.tablero[filaRandomE][columnaRandomE+1] = aux;
+                columnaRandomE++;
+            }else if (this.enemigo.getID().equals("=ga=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE][columnaRandomE+3];
+                this.tablero[filaRandomE][columnaRandomE+3] = aux;
+                columnaRandomE+=3;
+            }else if (this.enemigo.getID().equals("=br=")) {
+                aux = this.tablero[filaRandomE][columnaRandomE];
+                this.tablero[filaRandomE][columnaRandomE] = this.tablero[filaRandomE][this.columnas-1];
+                this.tablero[filaRandomE][this.columnas-1] = aux;
+                columnaRandomE = this.columnas-1;
+            }
+        }
+    }
+    
+    private void verificarCasillaMoverE(){
+        //1 -> verificar movimiento (bordes)
+        //2 -> verificar personajes
+        //3 -> verificar tipo de casilla alrededor del enemigo (arbol, agua, etc)
+        this.bandMovimientoArribaE=true;
+        this.bandMovimentoAbajoE=true;
+        this.bandMovimientoIzquierdaE=true;
+        this.bandMovimientoDerechaE=true;
+        
+        if (this.enemigo.getID().equals("=og=") || this.enemigo.getID().equals("=ca=")) {
+            //verificando si el ogro o el cancerbero se encuentra en uno de los bordes del tablero
+            if (filaRandomE==0 && this.columnaRandomP==0) {
+                this.bandMovimientoArribaE=false;
+                this.bandMovimientoIzquierdaE=false;
+            }if (filaRandomE==this.filas-1 && columnaRandomE==this.columnas-1) {
+                this.bandMovimentoAbajoE=false;
+                this.bandMovimientoDerechaE=false;
+            }if (filaRandomE==0) {
+                this.bandMovimientoArribaE=false;
+            }if (filaRandomE==this.filas-1) {
+                this.bandMovimentoAbajoE=false;
+            }if (columnaRandomE==0) {
+                this.bandMovimientoIzquierdaE=false;
+            }if (columnaRandomE==this.columnas-1) {
+                this.bandMovimientoDerechaE=false;
+            }
+            //verificando si hay personaje alrededor del ogro o del cancerbero
+            if(this.bandMovimientoArribaE==true){
+                if (tablero[filaRandomE-1][columnaRandomE].equals(this.personaje.getID())) {
+                    //hay un personaje arriba
+                    this.bandMovimientoArribaE=false;
+                }
+                if (tablero[filaRandomE-1][columnaRandomE].equals(" A ") || tablero[filaRandomE-1][columnaRandomE].equals(" a ")) {
+                    this.bandMovimientoArribaE=false;
+                }
+            }
+            if(this.bandMovimentoAbajoE==true){
+                if (tablero[filaRandomE+1][columnaRandomE].equals(this.personaje.getID())) {
+                    //hay un personaje abajo
+                    this.bandMovimentoAbajoE=false;
+                }
+                if (tablero[filaRandomE+1][columnaRandomE].equals(" A ") || tablero[filaRandomE+1][columnaRandomE].equals(" a ")) {
+                    this.bandMovimentoAbajoE=false;
+                }
+            }
+            if(this.bandMovimientoIzquierdaE==true){
+                if (tablero[filaRandomE][columnaRandomE-1].equals(this.personaje.getID())) {
+                    //hay un personaje a la izquierda
+                    this.bandMovimientoIzquierdaE=false;
+                }
+                if (tablero[filaRandomE][columnaRandomE-1].equals(" A ") || tablero[filaRandomE][columnaRandomE-1].equals(" a ")) {
+                    this.bandMovimientoIzquierdaE=false;
+                }
+            }
+            if(this.bandMovimientoDerechaE==true){
+                if (tablero[filaRandomE][columnaRandomE+1].equals(this.personaje.getID())) {
+                    //hay un personaje a la derecha
+                    this.bandMovimientoDerechaE=false;
+                }
+                if (tablero[filaRandomE][columnaRandomE+1].equals(" A ") || tablero[filaRandomE][columnaRandomE+1].equals(" a ")) {
+                    this.bandMovimientoDerechaE=false;
+                }
+            }
+                
+        }else if (this.enemigo.getID().equals("=ga=")) {
+            //verificando si la gárgola se puede mover
+            if ((filaRandomE-3)<0 && (columnaRandomE-3)<0) {
+                this.bandMovimientoArribaE=false;
+                this.bandMovimientoIzquierdaE=false;
+            }if ((filaRandomE+3)>this.filas-1 && (columnaRandomE+3)>this.columnas-1) {
+                this.bandMovimentoAbajoE=false;
+                this.bandMovimientoDerechaE=false;
+            }if ((filaRandomE-3)<0) {
+                this.bandMovimientoArribaE=false;
+            }if ((filaRandomE+3)>this.filas-1) {
+                this.bandMovimentoAbajoE=false;
+            }if ((columnaRandomE-3)<0) {
+                this.bandMovimientoIzquierdaE=false;
+            }if ((columnaRandomE+3)>this.columnas-1) {
+                this.bandMovimientoDerechaE=false;
+            }
+            //verificando si hay personaje alrededor de gárgola
+            if(this.bandMovimientoArribaE==true){
+                if (tablero[filaRandomE-3][columnaRandomE].equals(this.personaje.getID()) || tablero[filaRandomE-2][columnaRandomE].equals(this.personaje.getID()) || tablero[filaRandomE-1][columnaRandomE].equals(this.personaje.getID())) {
+                    this.bandMovimientoArribaE=false;
+                }
+            }
+            if(this.bandMovimentoAbajoE==true){
+                if (tablero[filaRandomE+3][columnaRandomE].equals(this.personaje.getID()) || tablero[filaRandomE+2][columnaRandomE].equals(this.personaje.getID()) || tablero[filaRandomE+1][columnaRandomE].equals(this.personaje.getID())) {
+                    this.bandMovimentoAbajoE=false;
+                }
+            }
+            if(this.bandMovimientoIzquierdaE==true){
+                if (tablero[filaRandomE][columnaRandomE-3].equals(this.personaje.getID()) || tablero[filaRandomE][columnaRandomE-2].equals(this.personaje.getID()) || tablero[filaRandomE][columnaRandomE-1].equals(this.personaje.getID())) {
+                    this.bandMovimientoIzquierdaE=false;
+                }
+            }
+            if(this.bandMovimientoDerechaE==true){
+                if (tablero[filaRandomE][columnaRandomE+3].equals(this.personaje.getID()) || tablero[filaRandomE][columnaRandomE+2].equals(this.personaje.getID()) || tablero[filaRandomE+1][columnaRandomE].equals(this.personaje.getID())) {
+                    this.bandMovimientoDerechaE=false;
+                }
+            }
+            //dado que gárgola vuela, se puede mover sin problemas
+                
+        }else if (this.enemigo.getID().equals("=br=")) {
+            //verificando si la bruja se encuentra en alguno de los bordes del tablero
+            if (filaRandomE==0 && columnaRandomE==0) {
+                this.bandMovimientoArribaE=false;
+                this.bandMovimientoIzquierdaE=false;
+            }if (filaRandomE==this.filas-1 && columnaRandomE==this.columnas-1) {
+                this.bandMovimentoAbajoE=false;
+                this.bandMovimientoDerechaE=false;
+            }if (filaRandomE==0) {
+                this.bandMovimientoArribaE=false;
+            }if (filaRandomE==this.filas-1) {
+                this.bandMovimentoAbajoE=false;
+            }if (columnaRandomE==0) {
+                this.bandMovimientoIzquierdaE=false;
+            }if (columnaRandomE==this.columnas-1) {
+                this.bandMovimientoDerechaE=false;
+            }
+                //verificando si hay personajes que interrumpan el paso de la bruja (en toda la linea)
+            if(this.bandMovimientoArribaE==true){
+                for (int i = filaRandomE; i >0; i--) {
+                    if (this.tablero[i-1][columnaRandomE].equals(this.personaje.getID())) {
+                        this.bandMovimientoArribaE=false;
+                        break;
+                    }
+                }
+            }
+            if(this.bandMovimentoAbajoE==true){
+                for (int i = filaRandomE; i < this.filas-1; i++) {
+                    if (this.tablero[i+1][columnaRandomE].equals(this.personaje.getID())) {
+                        this.bandMovimentoAbajoE=false;
+                        break;
+                    }
+                }
+            }
+            if(this.bandMovimientoIzquierdaE==true){
+                for (int i = columnaRandomE; i > 0; i--) {
+                    if (this.tablero[filaRandomE][i-1].equals(this.personaje.getID())) {
+                        this.bandMovimientoIzquierdaE=false;
+                        break;
+                    }
+                }
+            }
+            if(this.bandMovimientoDerechaE==true){
+                for (int i = columnaRandomE; i < this.columnas-1; i++) {
+                    if (this.tablero[filaRandomE][i+1].equals(this.personaje.getID())) {
+                        this.bandMovimientoDerechaE=false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    public void verificarCasillaMoverP(){
+        //1 -> verificar movimiento (bordes)
+        //2 -> verificar enemigos
+        //3 -> verificar tipo de casilla alrededor del personaje (arbol, agua, etc)
+        this.bandMovimientoArriba=true;
+        this.bandMovimientoAbajo=true;
+        this.bandMovimientoIzquierda=true;
+        this.bandMovimientoDerecha=true;
+        
+        if (this.personaje.getID().equals("-CA-")) {
+            //verificando si el caballero se encuentra en alguno de los bordes del tablero
+            if (this.filaRandomP==0 && this.columnaRandomP==0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA O HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoArriba=false;
+                this.bandMovimientoIzquierda=false;
+            }if (this.filaRandomP==this.filas-1 && this.columnaRandomP==this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO O HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoAbajo=false;
+                this.bandMovimientoDerecha=false;
+            }if (this.filaRandomP==0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoArriba=false;
+            }if (this.filaRandomP==this.filas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoAbajo=false;
+            }if (this.columnaRandomP==0) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoIzquierda=false;
+            }if (this.columnaRandomP==this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoDerecha=false;
+            }
+            //se entra a este espacio de condicion cuando el caballero no está en ninguno de los bordes del tablero
+            if(this.bandMovimientoArriba!=false){
+                if (tablero[this.filaRandomP-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ARRIBA DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoArriba=false;
+                }
+                if (tablero[this.filaRandomP-1][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP-1][this.columnaRandomP].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no te puedes mover hacia arriba");
+                    this.bandMovimientoArriba=false;
+                }
+            }
+            if(this.bandMovimientoAbajo!=false){
+                if (tablero[this.filaRandomP+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ABAJO DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoAbajo=false;
+                }
+                if (tablero[this.filaRandomP+1][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP+1][this.columnaRandomP].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no te puedes mover hacia abajo");
+                    this.bandMovimientoAbajo=false;
+                }
+            }
+            if(this.bandMovimientoIzquierda!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP-1].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU IZQUIERDA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoIzquierda=false;
+                }
+                if (tablero[this.filaRandomP][this.columnaRandomP-1].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP-1].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no te puedes mover hacia la izquierda");
+                    this.bandMovimientoIzquierda=false;
+                }
+            }
+            if(this.bandMovimientoDerecha!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP+1].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU DERECHA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoDerecha=false;
+                }
+                if (tablero[this.filaRandomP][this.columnaRandomP+1].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP+1].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no te puedes mover hacia la derecha");
+                    this.bandMovimientoDerecha=false;
+                }
+            }    
+            
+        }else if (this.personaje.getID().equals("-AR-")) {
+            //verificando si al arquero le es posible moverse
+            if ((this.filaRandomP-3)<0 && (this.columnaRandomP-3)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA NI HACIA LA IZQUIERDA");
+                this.bandMovimientoArriba=false;
+                this.bandMovimientoIzquierda=false;
+            }if ((this.filaRandomP+3)>this.filas-1 && (this.columnaRandomP+3)>this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO O HACIA LA DERECHA");
+                this.bandMovimientoAbajo=false;
+                this.bandMovimientoDerecha=false;
+            }if ((this.filaRandomP-3)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA");
+                this.bandMovimientoArriba=false;
+            }if ((this.filaRandomP+3)>this.filas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO");
+                this.bandMovimientoAbajo=false;
+            }if ((this.columnaRandomP-3)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA");
+                this.bandMovimientoIzquierda=false;
+            }if ((this.columnaRandomP+3)>this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA");
+                this.bandMovimientoDerecha=false;
+            }
+                //se entra a este espacio de condicion cuando el arquero si se puede mover sus tres casillas
+            if(this.bandMovimientoArriba!=false){
+                if (tablero[this.filaRandomP-1][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP-2][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP-3][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ARRIBA DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoArriba=false;
+                }
+                if (tablero[this.filaRandomP-3][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP-3][this.columnaRandomP].equals(" a ") || tablero[this.filaRandomP-2][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP-2][this.columnaRandomP].equals(" a ") || tablero[this.filaRandomP-1][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP-1][this.columnaRandomP].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no puedes moverte hacia arriba");
+                    this.bandMovimientoArriba=false;
+                }
+            }
+            if(this.bandMovimientoAbajo!=false){
+                if (tablero[this.filaRandomP+1][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP+2][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP+3][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ABAJO DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoAbajo=false;
+                }
+                if (tablero[this.filaRandomP+3][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP+3][this.columnaRandomP].equals(" a ") || tablero[this.filaRandomP+2][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP+2][this.columnaRandomP].equals(" a ") || tablero[this.filaRandomP+1][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP+1][this.columnaRandomP].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no puedes moverte hacia abajo");
+                    this.bandMovimientoAbajo=false;
+                }
+            }
+            if(this.bandMovimientoIzquierda!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP-1].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP-2].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP-3].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU IZQUIERDA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoIzquierda=false;
+                }
+                if (tablero[this.filaRandomP][this.columnaRandomP-3].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP-3].equals(" a ") || tablero[this.filaRandomP][this.columnaRandomP-2].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP-2].equals(" a ") || tablero[this.filaRandomP][this.columnaRandomP-1].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP-1].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no puedes moverte hacia la izquierda");
+                    this.bandMovimientoIzquierda=false;
+                }
+            }
+            if(this.bandMovimientoDerecha!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP+1].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP+2].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP+3].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU DERECHA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoDerecha=false;
+                }
+                if (tablero[this.filaRandomP][this.columnaRandomP+3].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP+3].equals(" a ") || tablero[this.filaRandomP][this.columnaRandomP+2].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP+2].equals(" a ") || tablero[this.filaRandomP][this.columnaRandomP+1].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP+1].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar, por lo tanto no puedes moverte hacia la derecha");
+                    this.bandMovimientoDerecha=false;
+                }
+            }
+            
+        }else if (this.personaje.getID().equals("-MA-")) {
+            //verificando movimiento del mago
+            if ((this.filaRandomP-2)<0 && (this.columnaRandomP-2)<0) {
+                System.out.println("NO TE PUEDES MOVER A LA IZQUIERDA O HACIA ARRIBA");
+                this.bandMovimientoArriba=false;
+                this.bandMovimientoIzquierda=false;
+            }if ((this.filaRandomP+2)>this.filas-1 && (this.columnaRandomP+2)>this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER A LA DERECHA O HACIA ABAJO");
+                this.bandMovimientoAbajo=false;
+                this.bandMovimientoDerecha=false;
+            }if ((this.filaRandomP-2)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA");
+                this.bandMovimientoArriba=false;
+            }if ((this.filaRandomP+2)>this.filas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO");
+                this.bandMovimientoAbajo=false;
+            }if ((this.columnaRandomP-2)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA");
+                this.bandMovimientoIzquierda=false;
+            }if ((this.columnaRandomP+2)>this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA");
+                this.bandMovimientoDerecha=false;
+            }
+                //se entra aqui cuado el mago si se puede mover sus dos casillas
+            if(this.bandMovimientoArriba!=false){
+                if (tablero[this.filaRandomP-2][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ARRIBA DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoArriba=false;
+                }
+            }
+            if(this.bandMovimientoAbajo!=false){
+                if (tablero[this.filaRandomP+2][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ABAJO DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoAbajo=false;
+                }
+            }
+            if(this.bandMovimientoIzquierda!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP-2].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP-1].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU IZQUIERDA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoIzquierda=false;
+                }
+            }
+            if(this.bandMovimientoDerecha!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP+2].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP+1].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU DERECHA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoDerecha=false;
+                }
+            }//dado a que el mago puede volar, no hay problema si se encuentra con casillas agua o casillas arbol
+            
+        }else if (this.personaje.getID().equals("-GI-")) {
+            //verificando el movimiento del gigante
+            if (this.filaRandomP==0 && this.columnaRandomP==0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA O HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoArriba=false;
+                this.bandMovimientoIzquierda=false;
+            }if (this.filaRandomP==this.filas-1 && this.columnaRandomP==this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO O HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoAbajo=false;
+                this.bandMovimientoDerecha=false;
+            }if (this.filaRandomP==0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoArriba=false;
+            }if (this.filaRandomP==this.filas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoAbajo=false;
+            }if (this.columnaRandomP==0) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoIzquierda=false;
+            }if (this.columnaRandomP==this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                this.bandMovimientoDerecha=false;
+            }
+                //se entra aqui cuando el gigante si se puede mover en las cuatro direcciones
+            if(this.bandMovimientoArriba!=false){
+                if (tablero[this.filaRandomP-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ARRIBA DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoArriba=false;
+                }
+                if (tablero[this.filaRandomP-1][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP-1][this.columnaRandomP].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar. Te puedes mover a todos lados menos arriba");
+                    this.bandMovimientoArriba=false;
+                }
+            }
+            if(this.bandMovimientoAbajo!=false){
+                if (tablero[this.filaRandomP+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ABAJO DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoAbajo=false;
+                }
+                if (tablero[this.filaRandomP+1][this.columnaRandomP].equals(" A ") || tablero[this.filaRandomP+1][this.columnaRandomP].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar. Te puedes mover a todos lados menos abajo");
+                    this.bandMovimientoAbajo=false;
+                }
+            }
+            if(this.bandMovimientoIzquierda!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP-1].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU IZQUIERDA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoIzquierda=false;
+                }
+                if (tablero[this.filaRandomP][this.columnaRandomP-1].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP-1].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar. Te puedes mover a todos lados menos a la izquierda");
+                    this.bandMovimientoIzquierda=false;
+                }
+            }
+            if(this.bandMovimientoDerecha!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP+1].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU DERECHA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoDerecha=false;
+                }
+                if (tablero[this.filaRandomP][this.columnaRandomP+1].equals(" A ") || tablero[this.filaRandomP][this.columnaRandomP+1].equals(" a ")) {
+                    System.out.println(this.personaje.getNombre()+" no puede volar. Te puedes mover a todos lados menos a la derecha");
+                    this.bandMovimientoDerecha=false;
+                }
+            }
+                
+        }else if (this.personaje.getID().equals("-DR-")) {
+            //verificando el movimiento del dragon
+            if ((this.filaRandomP-3)<0 && (this.columnaRandomP-3)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA NI HACIA LA IZQUIERDA");
+                this.bandMovimientoArriba=false;
+                this.bandMovimientoIzquierda=false;
+            }if ((this.filaRandomP+3)>this.filas-1 && (this.columnaRandomP+3)>this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO NI HACIA LA DERECHA");
+                this.bandMovimientoAbajo=false;
+                this.bandMovimientoDerecha=false;
+            }if ((this.filaRandomP-3)<0) {
+                System.out.println("NO TE PUEDES MOVER HACIA ARRIBA");
+                this.bandMovimientoArriba=false;
+            }if ((this.filaRandomP+3)>this.filas-1) {
+                System.out.println("NO TE PUEDES MOVER HACIA ABAJO");
+                this.bandMovimientoAbajo=false;
+            }if ((this.columnaRandomP-3)<0) {
+                System.out.println("NO TE PUEDES MOVER A LA IZQUIERDA");
+                this.bandMovimientoIzquierda=false;
+            }if ((this.columnaRandomP+3)>this.columnas-1) {
+                System.out.println("NO TE PUEDES MOVER A LA DERECHA");
+                this.bandMovimientoDerecha=false;
+            }
+                //se entra aqui cuando el dragon si se puede mover sus tres casillas
+            if(this.bandMovimientoArriba!=false){
+                if (tablero[this.filaRandomP-1][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP-2][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP-3][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ARRIBA DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ARRIBA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoArriba=false;
+                }
+            }
+            if(this.bandMovimientoAbajo!=false){
+                if (tablero[this.filaRandomP+1][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP+2][this.columnaRandomP].equals(this.enemigo.getID()) || tablero[this.filaRandomP+3][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO ABAJO DE TI!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA ABAJO, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoAbajo=false;
+                }
+            }
+            if(this.bandMovimientoIzquierda!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP-1].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP-2].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP-3].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU IZQUIERDA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA IZQUIERDA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoIzquierda=false;
+                }
+            }
+            if(this.bandMovimientoDerecha!=false){
+                if (tablero[this.filaRandomP][this.columnaRandomP+1].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP+2].equals(this.enemigo.getID()) || tablero[this.filaRandomP][this.columnaRandomP+3].equals(this.enemigo.getID())) {
+                    System.out.println("ENEMIGO A TU DERECHA!!!");
+                    System.out.println("NO TE PUEDES MOVER HACIA LA DERECHA, PERO SI A LOS DEMÁS LADOS");
+                    this.bandMovimientoDerecha=false;
+                }//dado a que el dragon puede volar, no importa si se encuentra con casillas tipo agua o casilas tipo arbol
+            }
+        }
+    }
+    
+    //método para verificar la casilla atacar enemigo (si un enemigo se encuentra alrededor para atacarlo y si si, encender la bandEnemigoCerca)
+    private void verificarCasillaAtacarEnemigo(){
+        
+        //¿HACER CICLOS EN TODAS LAS CONDICIONES? (COMO EN LA CONDICION DE MAGO) PARA QUE CUANDO ESTÉ YA EN EL BORDE SE DETENGA
+        //Y ASÍ NO ME TIRE ERROR
+        //QUITAR LOS THIS.BANDMOVIMIENTO YA QUE SI HAY UN ENEMIGO AL LADO DEL JUGADOR, BANDMOVIMIENTO VA SER FALSE
+        //Y POR LO TANTO NO VA A ENTRAR EN NINGUNA CONDICION
+        //ESTO SE SOLUCIONA CON EL CICLO EN EL CUAL SE VA VERIFICAR SI HAY UN PERSONAJE O YA NO HAY CASILLAS MAS ALLA
+        //CADA CICLO TENDRÁ COMO LÍMITE EL RANDO DE ATAQUE DEL PERSONAJE
+        this.bandEnemigoCerca=false;
+        if (this.personaje.getID().equals("-CA-")) {
+            //arriba
+            for (int i = this.filaRandomP; i > this.filaRandomP-1; i--) {
+                if (this.filaRandomP==0) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //abajo
+            for (int i = this.filaRandomP; i < this.filaRandomP+1; i++) {
+                if (this.filaRandomP==this.filas-1) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //izquierda
+            for (int i = this.columnaRandomP; i > this.filaRandomP-1; i--) {
+                if (this.columnaRandomP==0) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i-1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //derecha
+            for (int i = this.columnaRandomP; i < this.columnaRandomP+1; i++) {
+                if (this.columnaRandomP==this.columnas-1) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i+1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+        }else if (this.personaje.getID().equals("-AR-") || this.personaje.getID().equals("-GI-")) {
+            //arriba
+            for (int i = this.filaRandomP; i > this.filaRandomP-3; i--) {
+                if (this.filaRandomP<3) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //abajo
+            for (int i = this.filaRandomP; i < this.filaRandomP+3; i++) {
+                if (this.filaRandomP>this.filas-4) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //izquierda
+            for (int i = this.columnaRandomP; i > this.columnaRandomP-3; i--) {
+                if (this.columnaRandomP<3) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i-1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //derecha
+            for (int i = this.columnaRandomP; i < this.columnaRandomP+3; i++) {
+                if (this.columnaRandomP>this.filas-4) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i+1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+        }else if (this.personaje.getID().equals("-DR-")) {
+            //arriba
+            for (int i = this.filaRandomP; i > this.filaRandomP-2; i--) {
+                if (this.filaRandomP<2) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //abajo
+            for (int i = this.filaRandomP; i < this.filaRandomP+2; i++) {
+                if (this.filaRandomP>this.filas-3) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //izquierda
+            for (int i = this.columnaRandomP; i > this.columnaRandomP-2; i--) {
+                if (this.columnaRandomP<2) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i-1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+            //derecha
+            for (int i = this.columnaRandomP; i < this.columnaRandomP+2; i++) {
+                if (this.columnaRandomP>this.columnas-3) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i+1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                    break;
+                }
+            }
+        }else if (this.personaje.getID().equals("-MA-")) {
+            //arriba
+            for(int i = this.filaRandomP; i > 0; i--){
+                if (this.filaRandomP==0) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i-1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                }
+            }
+            //abajo
+            for(int i = this.filaRandomP; i < this.filas-1; i++){
+                if (this.filaRandomP==this.filas-1) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[i+1][this.columnaRandomP].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                }
+            }
+            //izquierda
+            for(int i = this.columnaRandomP; i > 0; i--){
+                if (this.columnaRandomP==0) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i-1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                }
+            }
+            //derecha
+            for(int i = this.columnaRandomP; i < this.columnas-1; i++){
+                if (this.columnaRandomP==this.columnas-1) {
+                    this.bandEnemigoCerca=false;
+                    break;
+                }
+                if (this.tablero[this.filaRandomP][i+1].equals(this.enemigo.getID())) {
+                    this.bandEnemigoCerca=true;
+                }
+            }
+        }
+        if (this.bandEnemigoCerca==false) {
+            System.out.println("NO HAY ENEMIGOS CERCA PARA ATACAR");
+        }
+    }
+    
+    private void atacarEnemigo(){
+        if (this.bandEnemigoCerca==true) {
+            this.enemigo.setVida(this.enemigo.getVida()-this.personaje.getDaño());
+        }
+    }
+    
+    private void atacarPersonaje(){
+        this.personaje.setVida(this.personaje.getVida()-this.enemigo.getDaño());
+    }
+    
+    //Método para jugar
+    public void jugar(){
+        /*solo para ver como funciona*/int k=10;
+        int opElegir;
+        int opMovimiento;
+        this.asignarPersonaje();
+        while(this.personaje.getVida()>0 && this.enemigo.getVida()>0){
+            System.out.println("VIDA DEL PERSONAJE: "+this.personaje.getVida());
+            System.out.println("VIDA DEL ENEMIGO: "+this.enemigo.getVida()+"\n");
+            
+            for (int i = 0; i < this.filas; i++) {
+                for (int j = 0; j < this.columnas; j++) {
+                    System.out.print(this.tablero[i][j]+" ");
+                }
+                System.out.println("");
+            }
+            do{
+                System.out.println("1 --> MOVER PERSONAJE");
+                System.out.println("2 --> ATACAR ENEMIGO");
+                opElegir = entrada.nextInt();
+                if (opElegir==1) {
+                    this.verificarCasillaMoverP();
+                    this.mostrarOpcionesMovimiento();
+                    opMovimiento = entrada.nextInt();
+                    this.moverPersonaje(opMovimiento);
+                }else if (opElegir==2) {
+                    this.verificarCasillaMoverP();
+                    this.verificarCasillaAtacarEnemigo();
+                    this.atacarEnemigo();
+                    if (this.bandEnemigoCerca==true) {
+                        this.atacarPersonaje();
+                    }
+                }else{
+                    System.out.println("OPCIÓN INVÁLIDA");
+                }
+                this.verificarCasillaMoverE();
+                this.moverEnemigo();
+            }while(opElegir!=1 && opElegir!=2);
+        }
+        if (this.personaje.getVida()<=0) {
+            System.out.println("TE HAN DERROTADO");
+        }else if (this.enemigo.getVida()<=0) {
+            System.out.println("HAS DERROTADO AL ENEMIGO");
+        }else if (this.personaje.getVida()<=0 && this.enemigo.getVida()<=0) {
+            System.out.println("AMBOS HAN CAÍDO");
+        }
+        System.out.println("VIDA DE "+this.personaje.getNombre()+": "+this.personaje.getVida());
+        System.out.println("VIDA DE "+this.enemigo.getNombre()+": "+this.enemigo.getVida()+"\n");
+        
+        
+    }
+    
+    
+    
+}
