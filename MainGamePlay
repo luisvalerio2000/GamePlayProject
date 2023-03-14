@@ -1,3 +1,5 @@
+
+package GamePlay;
 import java.util.*;
 /**
  *
@@ -6,7 +8,11 @@ import java.util.*;
 public class MainGamePlay {
     public static void main(String[] args) {
         Scanner entrada = new Scanner(System.in);
-        Tienda tiendaOp1 = new Tienda();    
+        Tienda tienda = new Tienda();
+        GeneradorGamePlay generador = new GeneradorGamePlay();
+        Personaje enemigoAleatorio = generador.generarEnemigoAleatorio();
+        int selecTab;
+        int selecTabPrede;
         String nombreJug;
         int opMenuPrin;
         int opMenu;
@@ -22,7 +28,7 @@ public class MainGamePlay {
         
         System.out.println("Hola, por favor digita tu nombre o tu nick :D");
         nombreJug = entrada.nextLine();
-        tiendaOp1.jugadorTienda.setNombreJugador(nombreJug);
+        tienda.jugadorTienda.setNombreJugador(nombreJug);
         
         do{
             bandOpMenuPrin = false;
@@ -38,19 +44,75 @@ public class MainGamePlay {
                 do{
                     System.out.println("INICIAR PARTIDA");
                     System.out.println("Antes de iniciar una partida, necesitas tener personajes..");
-                    do{
-                        tiendaOp1.mostrarPersonajes();
-                        tiendaOp1.mostarObjetos();
-                        tiendaOp1.mostrarMejoras();
-                        System.out.println("Oro del jugador: "+tiendaOp1.jugadorTienda.oroJugador);
+                    while(tienda.jugadorTienda.oroJugador>=25){
+                        entrada = new Scanner(System.in);
+                        tienda.mostrarPersonajes();
+                        tienda.mostarObjetos();
+                        tienda.mostrarMejoras();
+                        System.out.println("Oro del jugador: "+tienda.jugadorTienda.oroJugador);
                         System.out.println("Escribe el NOMBRE de lo que deseas que deseas comprar");
                         String nombreCompra = entrada.nextLine();
-                        tiendaOp1.comprarItems(nombreCompra,nombreJug);
+                        tienda.comprarItems(nombreCompra,nombreJug);
                     }
-                    while(tiendaOp1.jugadorTienda.oroJugador>=25);
-                    System.out.println("SELECCION DE MAPAS");
-                    
-                    //seleccion de mapas a continuacion
+                    //seleccion de tableros a continuacion
+                    System.out.println("SELECCION DE TABLERO");
+                    System.out.println("1 ---> Tableros predeterminados");
+                    System.out.println("2 ---> Crear un tablero");
+                    selecTab = entrada.nextInt();
+                    if (selecTab == 1) {
+                        System.out.println("1 ---> Tamaño 8X8");
+                        System.out.println("2 ---> Tamaño 10X10");
+                        entrada = new Scanner(System.in);
+                        selecTabPrede = entrada.nextInt();
+                        if (selecTabPrede == 1) {
+                            //crear un tablero 8x8
+                            String[][] tablero8x8 = new String[8][8];
+                            tablero8x8 = generador.generarTablero(8, 8, 55, 25, 10, 5);
+                            Juego juego = new Juego(tablero8x8, tienda.jugadorTienda.personajes[0], generador.generarEnemigoAleatorio(),8,8);
+                            juego.jugar();
+                            break;
+                            
+                        }else if (selecTabPrede == 2) {
+                            //crear un tablero 10x10
+                            String[][] tablero10x10 = new String[10][10];
+                            tablero10x10 = generador.generarTablero(10, 10, 55, 25, 10, 5);
+                            Juego juego = new Juego(tablero10x10, tienda.jugadorTienda.personajes[0], generador.generarEnemigoAleatorio(),10,10);
+                            juego.jugar();
+                            break;
+                            
+                        }
+                    }else if (selecTab == 2) {
+                        System.out.println("Hora de crear un tablero nuevo");
+                        System.out.println("GENERACION DE TABLERO");
+                        System.out.println("Digitar el numero de filas");
+                        nFilas = entrada.nextInt();
+                        System.out.println("Digitar el numero de columnas");
+                        nColumnas = entrada.nextInt();
+                        String[][] tableroJugar = new String[nFilas][nColumnas];
+                        System.out.println("        ********************IMPORTANTE********************");
+                        System.out.println("LA SUMA DE LOS PORCENTAJES DEBE SER MÍNIMA A 99, GRACIAS POR COOPERAR");
+                        System.out.println("Digitar el porcentaje de planicie (sobre 100%)");
+                        porPlanicie = entrada.nextInt();
+                        System.out.println("Digitar el porcentaje de cantidad de árboles (sobre 100%)");
+                        porArbol = entrada.nextInt();
+                        System.out.println("Digitar el porcentaje de cantidad de agua (sobre 100%)");
+                        porAgua = entrada.nextInt();
+                        System.out.println("Digitar el porcentaje de cantidad de lava (sobre 100%)");
+                        porLava = entrada.nextInt();
+                        tableroJugar = generador.generarTablero(nFilas, nColumnas, porPlanicie, porArbol, porAgua, porLava);
+                        if (porPlanicie+porArbol+porAgua+porLava<100) {
+                            tableroJugar = generador.generarTablero(nFilas, nColumnas, porPlanicie, porArbol, porAgua, porLava);
+                            Juego juego = new Juego(tableroJugar,tienda.jugadorTienda.personajes[0],generador.generarEnemigoAleatorio(),nFilas,nColumnas);
+                            juego.jugar();
+                        }
+                        else{
+                            System.out.println("La suma de los porcentajes debe ser mínima a 100");
+                        }
+                        
+                        
+                        break;
+                        //////////
+                    }
                     System.out.println("0 --> Regresar al menú principal");
                     opMenu = entrada.nextInt();
                     if (opMenu==0) {
@@ -64,19 +126,17 @@ public class MainGamePlay {
             }
             else if (opMenuPrin==2) {
                 do{
-                    System.out.println("TIENDA, AQUÍ PODRÁS COMPRAR PERSONAJES, OBJETOS O MEJORAS PARA TU EQUIPO");
+                    System.out.println("TIENDA. AQUÍ PODRÁS COMPRAR PERSONAJES, OBJETOS O MEJORAS PARA TU EQUIPO");
                     do{
-                        tiendaOp1.mostrarPersonajes();
-                        tiendaOp1.mostarObjetos();
-                        tiendaOp1.mostrarMejoras();
-                        System.out.println("Oro del jugador: "+tiendaOp1.jugadorTienda.oroJugador);
+                        tienda.mostrarPersonajes();
+                        tienda.mostarObjetos();
+                        tienda.mostrarMejoras();
+                        System.out.println("Oro del jugador: "+tienda.jugadorTienda.oroJugador);
                         System.out.println("Escribe el NOMBRE de lo que deseas que deseas comprar");
                         String nombreCompra = entrada.nextLine();
-                        tiendaOp1.comprarItems(nombreCompra,nombreJug);
+                        tienda.comprarItems(nombreCompra,nombreJug);
                     }
-                    while(tiendaOp1.jugadorTienda.oroJugador>=25);
-                    
-                    
+                    while(tienda.jugadorTienda.oroJugador>=25);
                     
                     System.out.println("0 --> Regresar al menú principal");
                     opMenu = entrada.nextInt();
@@ -91,13 +151,14 @@ public class MainGamePlay {
             }
             else if (opMenuPrin==3) {
                 do{
-                    GeneradorGamePlay generador = new GeneradorGamePlay();
                     System.out.println("GENERACION DE TABLERO");
                     System.out.println("Digitar el numero de filas");
                     nFilas = entrada.nextInt();
                     System.out.println("Digitar el numero de columnas");
                     nColumnas = entrada.nextInt();
                     String[][] tablero = new String[nFilas][nColumnas];
+                    System.out.println("        ********************IMPORTANTE********************");
+                    System.out.println("LA SUMA DE LOS PORCENTAJES DEBE SER MÍNIMA A 99, GRACIAS POR COOPERAR");
                     System.out.println("Digitar el porcentaje de planicie (sobre 100%)");
                     porPlanicie = entrada.nextInt();
                     System.out.println("Digitar el porcentaje de cantidad de árboles (sobre 100%)");
@@ -106,7 +167,7 @@ public class MainGamePlay {
                     porAgua = entrada.nextInt();
                     System.out.println("Digitar el porcentaje de cantidad de lava (sobre 100%)");
                     porLava = entrada.nextInt();
-                    if (porPlanicie+porArbol+porAgua+porLava<=100) {
+                    if (porPlanicie+porArbol+porAgua+porLava<100) {
                         tablero = generador.generarTablero(nFilas, nColumnas, porPlanicie, porArbol, porAgua, porLava);
                         for (int i = 0; i < nFilas; i++) {
                             for (int j = 0; j < nColumnas; j++) {
@@ -132,13 +193,23 @@ public class MainGamePlay {
             }else if (opMenuPrin==4) {
                 do{
                     System.out.println("INVENTARIO");
-                    tiendaOp1.jugadorTienda.mostrarDatos();
+                    tienda.jugadorTienda.mostrarDatos();
+                    //falta desarrollar la opcion de vender items
+                    System.out.println("1 ---> VENDER ITEMS");
                     System.out.println("0 --> Regresar al menú principal");
                     opMenu = entrada.nextInt();
                     if (opMenu==0) {
                         bandOpMenuPrin=true;
                         bandOpMenu=false;
-                    }else{
+                    }else if (opMenu==1) {
+                        //vender items
+                        entrada = new Scanner(System.in);
+                        bandOpMenu=true;
+                        System.out.println("Digita el nombre del item: ");
+                        String nombreItemVenta = entrada.nextLine();
+                        tienda.venderItem(nombreItemVenta);
+                    }
+                    else{
                             System.out.println("OPCIÓN INVÁLIDA, VUELVE A ELEGIR..");
                             bandOpMenu = true;
                     }
